@@ -1,0 +1,88 @@
+.e-Dönüşüm Ürünleri UML Diagramı
+[uml,file="umlSinif.png"]
+--
+@startuml
+left to right direction
+
+enum Userstate{
+	New
+	Active
+	Blocked
+	Banned
+}
+
+interface Bilgiler{
+    String kullanicibilgileri()
+    String odemeBilgileriniAl()
+    boolean bilgilerdogrumu()
+    int satinAlinanlar()
+    enum UserState()
+}
+
+Class eArsiv{
+  -İmza Bilgisi
+  +musteriye Mail At()
+}
+
+Class Arsiv {
+    -Kullanım Belgesi
+    +ManuelBilgiGir
+}
+
+Class ShoppingCard{
+    created:Date
+}
+
+Class Customer{
+    -id:int
+    -Adress:adress
+    -Phone:Phone
+    -email:String
+    +Arsive Yukle()
+    #Tedarikciye Bak()
+}
+
+Class Product{
+  -id:int
+  +name:String
+  -supplier:Supplier
+}
+
+Class AlinanFirma{
+ -Siparis Bilgisi()
+ +Alinan Urunler()
+ +Bulut Tabanlı Depola()
+ +Veriyi Analiz Et()
+}
+
+enum Goruntuleme{
+    PDF
+    Adobe Form
+    XML
+}
+
+Product - Customer
+
+Customer..|>Arsiv
+
+eArsiv-->ShoppingCard : <<document>>
+
+eFatura"1" *-- "*"AlinanFirma
+
+Product"1" *-- "*"eFatura
+
+Product - Bilgiler
+
+Bilgiler --o Goruntuleme
+
+Arsiv .. eArsiv
+
+eArsiv .. Userstate
+
+AlinanFirma ^-- Goruntuleme
+
+eFatura ..> eArsiv
+
+@enduml
+--  
+
