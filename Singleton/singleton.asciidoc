@@ -1,0 +1,53 @@
+= Tasarım Kalıpları Dersi Singleton Pattern
+
+== Java Source Code
+
+.Singleton.cs
+[source,java]
+----
+import java.util.*;
+
+Class Singleton
+{
+    public static class Program
+    {
+        public static void Main(string[] args)
+        {
+           Car.CarInstance.Price();
+            Car.CarInstance.Colour();
+            Car.CarInstance.Model = "Bmw";
+            Console.WriteLine(Car.CarInstance.Model);
+        }
+    }
+
+    public sealed class Car
+    {
+        public string CarName { get; set; } // <1>
+        private Car() // <2>
+        {
+            
+        }
+        
+        private static readonly Lazy<Car> Lazy = new Lazy<Car>(() => new Car()); // <3>
+
+        public static Car CarInstance => Lazy.Value; // <4>
+
+        public void Price() // <5>
+        {
+            Console.WriteLine("Price:35.000$");
+        }
+
+        public void Colour() // <5>
+        {
+            Console.WriteLine("Car is Blue");
+        }
+    }
+    
+}
+
+<1> Singleton Property
+<2> Private constructor
+<3> Create thread safe singleton instance with Lazy.
+<4> Return singleton instance
+<5> An instance function
+----

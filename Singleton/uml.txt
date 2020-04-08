@@ -1,0 +1,17 @@
+[uml,file="Singleton.png"]
+--
+@startuml
+
+title Car
+
+class Car
+
+Car : {static} Lazy: Car
+Car : CarName
+Car : Colour()
+Car : Price()
+Car : {static} CarInstance(): Car
+
+Car ---> Car
+
+@enduml

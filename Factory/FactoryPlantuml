@@ -1,0 +1,31 @@
+[uml,file="Factory.png"]
+--
+@startuml
+
+interface ICarFactory{
++ICar GetCar(string CarType);
+}
+class CarFactory{
++ICar GetCar(string CarType);
+}
+interface ICar{
++void Price();
+}
+class Bmw{
++void Price();
+}
+class Ferrari{
++void Price();
+}
+class Renault{
++void Price();
+}
+ICar <|-- Bmw
+ICar <|-- Ferrari
+ICar <|-- Renault
+ICarFactory <|-- CarFactory
+CarFactory ..|> Bmw
+CarFactory ..|> Ferrari
+CarFactory ..|> Renault
+
+@enduml
