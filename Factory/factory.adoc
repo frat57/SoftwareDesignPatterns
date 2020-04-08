@@ -1,0 +1,87 @@
+= Tasarım Kalıpları Dersi Singleton Pattern
+
+== C# Source Code
+
+.Factory.cs
+[source,c++]
+----
+using System;
+
+namespace Factory
+{
+    public static class Program
+    {
+        public static void Main(string[] args)
+        {
+            CarFactory factory = new CarFactory(); // <1>
+            CarFactory car = factory.GetCar("Bmw"); // <2<
+            Console.WriteLine(Car.Price()); // <3>
+        }
+    }
+
+    public interface ICarFactory // <4>
+    {
+        ICar GetCar(string CarType);
+    }
+
+    public class CarFactory : ICarFactory <5>
+    {
+        public ICar GetCar(string CarType)
+        {
+            if (CarType.Equals("Bmw"))
+            {
+                return new Bmw();
+            }
+
+            if (CarType.Equals("Ferrari"))
+            {
+                return new Ferrari();
+            }
+
+            if (CarType.Equals("Renault"))
+            {
+                return new Renault();
+            }
+
+            return null;
+        }
+    }
+
+    public interface ICar //<6>
+    {
+        string Price();
+    }
+
+    public class Ferrari : ICar // <7>
+    {
+        public string Price()
+        {
+            return "Price:30.000$";
+        }
+    }
+
+    public class Renault : ICar // <7>
+    {
+        public string Model()
+        {
+            return "Price:35.000$!";
+        }
+    }
+
+    public class Bmw : ICar // <7>
+    {
+        public string Model()
+        {
+            return "Price:40.000$";
+        }
+    }
+}
+
+<1> Create Factory
+<2> Call Factory Function
+<3> Call Car Function
+<4> Factory Interface
+<5> Concrete Factory
+<6> Car Interface
+<7> Car Concrete
+----
