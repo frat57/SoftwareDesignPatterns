@@ -1,0 +1,13 @@
+C:\Users\Albayrak\source\repos\ShallowAndDeppCopy\ShallowAndDeppCopy\bin\Debug\netcoreapp3.1\ShallowAndDeppCopy.exe
+C:\Users\Albayrak\source\repos\ShallowAndDeppCopy\ShallowAndDeppCopy\bin\Debug\netcoreapp3.1\ShallowAndDeppCopy.deps.json
+C:\Users\Albayrak\source\repos\ShallowAndDeppCopy\ShallowAndDeppCopy\bin\Debug\netcoreapp3.1\ShallowAndDeppCopy.runtimeconfig.json
+C:\Users\Albayrak\source\repos\ShallowAndDeppCopy\ShallowAndDeppCopy\bin\Debug\netcoreapp3.1\ShallowAndDeppCopy.runtimeconfig.dev.json
+C:\Users\Albayrak\source\repos\ShallowAndDeppCopy\ShallowAndDeppCopy\bin\Debug\netcoreapp3.1\ShallowAndDeppCopy.dll
+C:\Users\Albayrak\source\repos\ShallowAndDeppCopy\ShallowAndDeppCopy\bin\Debug\netcoreapp3.1\ShallowAndDeppCopy.pdb
+C:\Users\Albayrak\source\repos\ShallowAndDeppCopy\ShallowAndDeppCopy\obj\Debug\netcoreapp3.1\ShallowAndDeppCopy.csprojAssemblyReference.cache
+C:\Users\Albayrak\source\repos\ShallowAndDeppCopy\ShallowAndDeppCopy\obj\Debug\netcoreapp3.1\ShallowAndDeppCopy.AssemblyInfoInputs.cache
+C:\Users\Albayrak\source\repos\ShallowAndDeppCopy\ShallowAndDeppCopy\obj\Debug\netcoreapp3.1\ShallowAndDeppCopy.AssemblyInfo.cs
+C:\Users\Albayrak\source\repos\ShallowAndDeppCopy\ShallowAndDeppCopy\obj\Debug\netcoreapp3.1\ShallowAndDeppCopy.dll
+C:\Users\Albayrak\source\repos\ShallowAndDeppCopy\ShallowAndDeppCopy\obj\Debug\netcoreapp3.1\ShallowAndDeppCopy.pdb
+C:\Users\Albayrak\source\repos\ShallowAndDeppCopy\ShallowAndDeppCopy\obj\Debug\netcoreapp3.1\ShallowAndDeppCopy.csproj.CoreCompileInputs.cache
+C:\Users\Albayrak\source\repos\ShallowAndDeppCopy\ShallowAndDeppCopy\obj\Debug\netcoreapp3.1\ShallowAndDeppCopy.genruntimeconfig.cache
