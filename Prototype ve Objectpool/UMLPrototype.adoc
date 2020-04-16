@@ -1,0 +1,21 @@
+@startuml
+left to right direction
+
+class Employee{
++String Name
++String Department
++ShallowCopy(): Employee
++DeepCopy(): Employee
+}
+
+class Main{
++name:{get,set}
++department:{get,set}
++GetClone():Employee
+}
+
+Main*-- Employee
+
+Main -> Employee
+
+@enduml
