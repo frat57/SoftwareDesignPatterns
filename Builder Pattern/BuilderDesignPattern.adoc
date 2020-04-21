@@ -1,0 +1,47 @@
+@startuml
+skinparam classAttributeIconSize 0
+left to right direction
+
+class TostDirector{
+    +void Construct()
+}
+
+abstract class TostBuilder{
+    #Tost tost
+
+    +Tost Tost()
+    +void BuildKetchup()
+    +void BuildButter()
+    +void BuildSausage()
+    +void BuildCheddarcheese()
+}
+
+class KarisikBuilder{
+    +KarisikBuilder()
+}
+
+class KasarliBuilder{
+    +KasarliBuilder()
+}
+
+class AyvalikBuilder{
+    +AyvalikBuilder()
+}
+
+class Tost{
+    -string _brand
+    -Dictionary<string, string> _parts
+    +Tost()
+    +string this[]()
+    +void Show()
+}
+
+
+TostDirector "builder" o---> TostBuilder
+KarisikBuilder --|> TostBuilder
+KasarliBuilder --|> TostBuilder
+AyvalikBuilder --|> TostBuilder
+KarisikBuilder ...> Tost
+KasarliBuilder ...> Tost
+AyvalikBuilder ...> Tost
+@enduml
