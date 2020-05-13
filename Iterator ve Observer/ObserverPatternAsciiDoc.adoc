@@ -1,0 +1,109 @@
+= Tasarım Kalıpları Dersi Observer Pattern
+
+== C# Source Code
+
+.ObserverPattern.cs
+[source,c#]
+----
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ObserverPattern
+{
+    public interface IObserver
+    {
+        void Update(ISubject subject);
+    }
+
+    public interface ISubject
+    {
+        void Attach(IObserver observer);
+
+        void Detach(IObserver observer);
+
+        void Price(int a);
+    }
+
+    public class Pizza : ISubject
+    {
+        public int State { get; set; } = -0;
+
+
+        private List<IObserver> _observers = new List<IObserver>();
+
+
+        public void Attach(IObserver observer)
+        {
+            Console.WriteLine("Subject: Pizzan ekleniyor.");
+            _observers.Add(observer);
+        }
+
+        public void Detach(IObserver observer)
+        {
+            _observers.Remove(observer);
+            Console.WriteLine("Subject: Pizzan çıkarılıyor.");
+        }
+
+        public void Price(int a)
+        {
+            Console.WriteLine("Pizza Fiyatı: " + a);
+
+            foreach (var observer in _observers)
+            {
+                observer.Update(this);
+            }
+        }
+        public void SomeBusinessLogic()
+        {
+            Console.WriteLine("\nSubject: Pizza yapılıyor.");
+            this.State = new Random().Next(0, 10);
+
+            Thread.Sleep(15);
+
+            Console.WriteLine("Subject: Durum tamamen değişti: " + this.State);
+            this.Price(25);
+        }
+
+        class Client : IObserver
+        {
+            public void Update(ISubject subject)
+            {
+                if ((subject as Pizza).State < 3)
+                {
+                    Console.WriteLine("Karışık Pizza");
+                }
+                else Console.WriteLine("Kaşarlı Pizza");
+            }
+
+        }
+
+
+        class Program
+        {
+            static void Main(string[] args)
+            {
+
+                var rnd = new Random();
+                var pizza = new Pizza();
+
+                var musteri = new Client();
+                var musteri2 = new Client();
+                
+                pizza.Price(500);
+                Parallel.For(0, 5, (i, loopState) =>
+                {
+                int delay;
+                lock (rnd);
+                delay = rnd.Next(1, 1001);
+                Thread.Sleep(delay);
+                pizza.SomeBusinessLogic();
+                pizza.Attach(musteri);
+                pizza.Detach(musteri2);
+                });
+            }
+        }
+    }
+}
+----

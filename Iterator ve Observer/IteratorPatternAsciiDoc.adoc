@@ -1,0 +1,170 @@
+= Tasarım Kalıpları Dersi Iterator Pattern
+
+== C# Source Code
+
+.IteratorPattern.cs
+[source,c#]
+----
+using System;
+
+namespace IteratorPattern
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Build a collection
+            ConcreteCollection collection = new ConcreteCollection();
+            collection.AddPizza(new Pizza("Karışık", 100));
+            collection.AddPizza(new Pizza("Margarita", 101));
+            collection.AddPizza(new Pizza("Kampüs", 102));
+            collection.AddPizza(new Pizza("Keyfim", 103));
+            collection.AddPizza(new Pizza("Sucuk Zengini", 104));
+            collection.AddPizza(new Pizza("Şımartan", 105));
+            collection.AddPizza(new Pizza("Yaprak Dönerli", 106));
+
+            // Create iterator
+            Iterator iterator = collection.CreateIterator();
+            //looping iterator      
+            Console.WriteLine("Iterating over collection:");
+
+            for (Pizza pz = iterator.First(); !iterator.IsCompleted; pz = iterator.Next())
+            {
+                Console.WriteLine($"ID : {pz.ID} & Name : {pz.Name}");
+            }
+            Console.Read();
+        }
+    }
+}
+----
+.IteratorPattern.cs
+[source,c#]
+----
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace IteratorPattern
+{
+    class Pizza
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public Pizza(string name, int id)
+        {
+            Name = name;
+            ID = id;
+        }
+    }
+}
+----
+.Iterator.cs
+[source,c#]
+----
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace IteratorPattern
+{
+    class Iterator : AbstractIterator
+    {
+        private ConcreteCollection collection;
+        private int current = 0;
+        private int step = 1;
+        // Constructor
+        public Iterator(ConcreteCollection collection)
+        {
+            this.collection = collection;
+        }
+        // Gets first item
+        public Pizza First()
+        {
+            current = 0;
+            return collection.GetPizza(current);
+        }
+        // Gets next item
+        public Pizza Next()
+        {
+            current += step;
+            if (!IsCompleted)
+            {
+                return collection.GetPizza(current);
+            }
+            else
+            {
+                return null;
+            }
+        }
+        // Check whether iteration is complete
+        public bool IsCompleted
+        {
+            get { return current >= collection.Count; }
+        }
+    }
+}
+----
+.Iterator.cs
+[source,c#]
+----
+using System.Collections.Generic;
+
+namespace IteratorPattern
+{
+    class ConcreteCollection : AbstractCollection
+    {
+        private List<Pizza> listPizza = new List<Pizza>();
+        //Create Iterator
+        public Iterator CreateIterator()
+        {
+            return new Iterator(this);
+        }
+        // Gets item count
+        public int Count
+        {
+            get { return listPizza.Count; }
+        }
+        //Add items to the collection
+        public void AddPizza(Pizza pizza)
+        {
+            listPizza.Add(pizza);
+        }
+        //Get item from collection
+        public Pizza GetPizza(int IndexPosition)
+        {
+            return listPizza[IndexPosition];
+        }
+    }
+}
+----
+.AbstractIterator.cs
+[source,c#]
+----
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace IteratorPattern
+{
+    interface AbstractIterator
+    {
+        Pizza First();
+        Pizza Next();
+        bool IsCompleted { get; }
+    }
+}
+----
+.IteratorPattern.cs
+[source,c#]
+----
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace IteratorPattern
+{
+    interface AbstractCollection
+    {
+        Iterator CreateIterator();
+    }
+}
