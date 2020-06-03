@@ -1,0 +1,154 @@
+= Decorator Design Pattern
+
+Nesne yönelimli programlamada, dekoratör deseni, aynı sınıftaki diğer nesnelerin davranışını etkilemeden, tek bir nesneye davranışın dinamik olarak eklenmesine izin veren bir tasarım modelidir.
+
+==== Ne zaman Kullanılır?
+
+Runtime zamanında bir nesneye yeni özellikler eklemek istiyorsak kullanabiliriz.
+
+* Decorator örüntüsünü kullanma sebebim,  sabit, değişmeyen 2 özellik varsaydım. Saç kesme ve sakal kesme önlemleri.Bu özellikleri berbere gittiğimizde hiç değişmeyeceğini varsayarak yazdım.Hali hazırdaki component sınıfımın yapısını bozmadan decorator nesnesi sayesinde önceki Saç Kesme, Sakal kesme metotlarımızı da kullanarak yeni özelliğimizi oluşturmuş olduk.Böylece bundan sonra gelecek/gelebilecek özellikler, soyut decoratordan miras alacak şekilde somut bir yeni decorator nesnesi oluşturularak özellik tanımlanabilir.Böylece değişiklik/geliştirme isteklerine kolay bir şekilde cevap verilebilir.
+
+=== Temel Olarak 4 Kısımdan Oluşur
+
+Component : Dinamik olarak sorumluklar eklenebilecek olan asıl nesne için sunulan arayüzdür. Interface veya abstract sınıf olarak tasarlanabilir.
+
+ConcreteComponent : Sorumlulukların dinamik olarak eklenebilecekleri asıl bileşen sınıflarıdır. Component arayüzünü uyarlarlar.
+
+Decorator : Decorator tipi hem Component arayüzünü uygular hemde kendi içerisinde Component tipinden bir nesne örneği referansını barındırır. Bu sebepten UML şemasındanda görüldüğü gibi Decorator ve Component arasında bir Aggregation ilişkisi mevcuttur.
+
+ConcreteDecorator : Bileşenlere yeni sorumlulukları eklemekle görevli tiptir. Ek işlevler bu tip içerisinde tanımlanan üyelerdir.
+
+[source,c#]
+-----
+ public interface IBerber
+    {
+        void SacKes();
+        void SakalKes();
+    }
+-----
+Yukarıda da anlattığımız Componentimiz yani interfaceimiz 2 metodu mevcut daha sonra bu sınıftan türetmeler yaparak override ettiğimiz metodları kullanacağız.
+[source,c#]
+-----
+class Berber : IBerber
+    {
+        public void SacKes()
+        {
+            Console.WriteLine("Saçlar  kesildi.");
+        }
+        public void SakalKes()
+        {
+            Console.WriteLine("Sakallar  kesildi.");
+        }
+
+    }
+-----
+Berber classımız ise Concrete Componentimizdir.İnterfacemizde ki metodların içeriğini burada dolduruyoruz SacKes SakalKes fonksiyonlarımızın.
+
+[source,c#]
+-----
+ public abstract class Usta : IBerber
+    {
+        private IBerber berber;
+        public int sac { get; set; }
+        public int sakal { get; set; }
+        public string name { get; set; }
+
+        public void SacMaliyet(int sac)
+        {
+            this.sac = sac;
+            Console.WriteLine("Saç kesme ücreti:" + sac);
+        }
+        public void SakalMaliyet(int sakal)
+        {
+            this.sakal = sakal;
+            Console.WriteLine("Sakal kesme ücreti:" + sakal);
+        }
+        public void Name(string name)
+        {
+            this.name = name;
+            Console.WriteLine("Kime saç sakal hizmeti verildi:" + name);
+        }
+        public Usta(IBerber b)
+        {
+            berber = b;
+        }
+        public virtual void SacKes()
+        {
+            berber.SacKes();
+        }
+
+        public virtual void SakalKes()
+        {
+            berber.SakalKes();
+        }
+       
+        public void Yazdir()
+        {
+            Console.WriteLine("id:" + this.GetHashCode() + "  sac=" + this.sac + "  sakal=" + this.sakal + "  isim=" + this.name);
+        }
+
+    }
+-----
+Usta classımız ise abstract ve aslında Decorator classımızdır.Yazdığımız işlevler sayesinde Saç maliyeti sakal maliyeti ve kesilen kişinin ismi gibi özellikleri alabilecek yapıda tasarlanmıştır.Yazdir metodumuz la birlikte her şeyin görünümünü daha sade bir hale getirdik.
+[source,c#]
+-----
+ public  class Cirak : Usta
+    {
+        private IBerber berber;
+        public Cirak(IBerber b) : base(b)
+        {
+            berber = b;
+        }
+        public override void SacKes()
+        {
+            base.SacKes();
+        }
+
+        public override void SakalKes()
+        {
+            base.SakalKes();
+        }
+        public Cirak Deepcopy()
+        {
+            return (Cirak)this.MemberwiseClone();
+        }
+    }
+-----
+Usta sınıfından türettiğimiz Cirak classımız aslında ConcreteDecorator işleemi görür.Yine SacKes ve SakalKes metodlarını yine override ediyoruz ve base classımızdan alıyoruz.Ayrıca Constructorımızda var interface classından bir nesne üretip kullanıyoruz ve ayriyeten Deepcopy mekanizması ekledik bu sayede Mainimizde Cirak üretirken Deep Copy özelliğinide yapabileceğiz.
+[source,c#]
+-----
+class Program
+    {
+        static void Main(string[] args)
+        {
+            Berber deneme = new Berber();
+            Cirak b1 = new Cirak(deneme);
+            
+            b1.SacMaliyet(40);
+            b1.SakalMaliyet(20);
+            b1.Name("Firat");
+            IBerber berber = new Berber();
+            berber.SacKes();
+            berber.SakalKes();
+            Console.WriteLine("Shallow Copy öncesi");
+            Cirak b2 = b1;
+            b2.SacMaliyet(50);
+            b2.SakalMaliyet(50);
+            b2.Name("Batuhan");
+            b2.Yazdir();
+            b1.Yazdir();
+            Console.WriteLine("Shallow Copy bitişi");
+            Cirak b3 = b1.Deepcopy();
+            b3.SacMaliyet(30);
+            b3.SakalMaliyet(40);
+            b3.Name("Zeki");
+            b3.Yazdir();
+            b1.Yazdir();
+        }
+    }
+-----
+Mainimizde öncelikle berber classından bir türetme yapıyoruz sonrasında ise Cirak nesnesi üretiyoruz ama bu nesneyi üretirken oradaki Constructorımıza Berber den ürettiğimiz nesneyi yolluyoruz.Bu sayede tüm metodlarımıza artık erişebilir olduk.b1 kişisi için saç maliyet, sakal maliyet ve ismi gibi özellikleri alıp bastırıyoruz sonrasında ise Shallow copy örneği ile 2. bir nesne oluşturup birincisi ile aynı olup olmadığını kontrol ediyoruz.Deep copy içinse Cirak ta yazdığımız metodu çağırarak çıktımızda her şeyin farklı olduğunu görüyoruz.
+
+image::Desktop\SoftwareDesign\Decorator\Decorator(Prototype) Pattern.PNG[]
+
+Görüldüğü gibi çıktımızda da gelen değerler doğru bir şekilde geldi.Shallow ve Deep copyi doğru bir şekilde implemente ettik.

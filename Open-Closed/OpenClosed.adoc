@@ -1,0 +1,112 @@
+== SOLID PRENSİPLERİ
+
+* Single-responsiblity principle: Nesnenin sadece bir sorumluluğu olmalıdır, yani olası bir değişiklikte bunun tek bir sebebi olmalıdır. 
+
+* Open-closed principle: Nesne genişlemeye açık ancak değişikliklere kapalı olmalıdır. 
+
+* Liskov substitution principle: Programdaki nesnelerin, programın çalışmasında sorun yaratmadan kendi alt örnekleri ile değiştirilebilir olmasıdır.
+
+* Interface segregation principle: Nesnelerin ihtiyaç duymadıkları metodların arayüzlerinden mümkün olduğunca ayrıştırılmasıdır. 
+
+* Dependency Inversion Principle: Yüksek seviyeli sınıflar, düşük seviyeli sınıflara bağlı olmamalı, her ikisi de soyut kavramlara bağlı olmalıdır.
+
+
+== Open Closed Principle (Açık Kapalı Prensibi)
+
+
+Açık kapalı prensibi aslında son derece basit bir ilkedir. Bu ilke bir sistemin sürekli olarak değişimlere maruz kalabileceğini göz önüne alaraktan(ki örneğin çevik süreçlerde hızlı değişimler asıl odaklanılan noktadır), genişletilmeye açık ama modifiye edilmeye kapalı varlıkların(Sınıf, Method vb...) kullanılmasını önerir. Gerçekten de günümüz girişim çözümlerinin çoğunda,müşteri ihtiyaçlarına göre yazılımın sürekli güncelleniyor olması gerekmektedir.Buda günümüzde aslında müşterileri kapmak için  çok fazla release yapılarakta örneklenebilir.  Bu noktada güncelleştirme yaparken koda dokunmadan yapmak çok zordur ama burada Open Closed devreye girebilir.
+
+Open Sınıf için yeni davranışlar eklenebilmesini sağlar. Gereksinimler değiştiğinde, yeni gereksinimlerin karşılanabilmesi için bir sınıfa yeni veya farklı davranışlar eklenebilir olmasıdır.
+
+Closed Bir sınıf temel özelliklerinin değişimi ise mümkün olmamalıdır.
+
+Bu prensibin amacı kısaca “gelişime açık, değişime kapalı” sistematiğinde sınıflar tasarlamamız mantığını oluşturmakta.
+
+
+
+[source,c#]
+-----
+
+    public abstract class Bilgisayar
+    {
+        public abstract void Fiyat();
+        public abstract void Olusturmak();
+
+    }
+    public class Laptop : Bilgisayar
+    {
+        public int Islemci { get; set; }
+        public int Ram { get; set; }
+        public int EkranKarti { get; set; }
+        public int AnaKart { get; set; }
+        public override void Fiyat()
+        {
+            Console.WriteLine(Islemci + Ram + EkranKarti + AnaKart);
+        }
+        public override void Olusturmak()
+        {
+            Console.WriteLine("Laptop oluşturuldu.");
+        }
+
+    }
+    public class Desktop : Bilgisayar
+    {
+        public int Islemci { get; set; }
+        public int Ram { get; set; }
+        public int EkranKarti { get; set; }
+        public int AnaKart { get; set; }
+        public override void Fiyat() {
+            Console.WriteLine(Islemci + Ram + EkranKarti + AnaKart);
+        }
+        public override void Olusturmak()
+        {
+            Console.WriteLine("Desktop oluşturuldu.");
+        }
+    }
+-----
+    
+
+Bilgisayar abstract classımın  içerisinde iki tane abstract metod mevcuttur.Fiyat ve Olusturmak bunlar fiyatta ve bilgisayar olusturmak amacı ile yapılmış metodlardır. 
+Laptop ve Desktop classlarımda ise bun fiyat ve oluşturmak sınıflarını override edip ezdim.Fiyat ın içerisinde islemci,ram,ekran kartı ve ana kart ın ücretinin toplamı tüm bilgisayarı olucak şekilde olustur classımda ise sadece olusturuldu yazdırarak işlem yaptırıyorum.
+
+
+
+[source,c#]
+------
+class BilgisayarYapıcı
+    {
+        public void Olustur(Bilgisayar bilgisayar)
+        {
+            bilgisayar.Olusturmak();
+        }
+    }
+
+------
+
+BilgisayarYapıcı classımda Olustur adında bir metodum var ve tek görevi parametre olarak aldığı abstract urun'den türeyen objeyi alıp Olusturmak metodunu çağırmaktır.
+
+
+[source,c#]
+------
+class Program
+{
+     static void Main(string[] args)
+        {
+
+           Laptop laptop = new Laptop(100,100,100,100);
+            Desktop desktop = new Desktop(100, 100, 100, 100);
+            laptop.Olusturmak();
+            laptop.Fiyat();
+            desktop.Olusturmak();
+            desktop.Fiyat();
+        }
+}
+------
+Mainde üretmek istediğimiz  nesneleri çağırarak laptop ve desktop için ayrı ayrı işlemci,anakart,ekran kartı fiyatlarını girip fiyat ve olusturmak fonksiyonlarını çağırıyoruz.
+   
+== Kodun Çıktısı
+
+image::Desktop\SoftwareDesign\Open-Closed\OpenClosedCikti.PNG[]
+
+Mainde Oluşturduğumuz nesnelere verdiğimiz değerler sonucunda Fiyat toplamımızın 400 olduğunu ve Olustur fonksiyonundan ise oluşturuldu ifadesinin geldiğini görüyoruz.
+

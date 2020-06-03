@@ -1,0 +1,57 @@
+[uml,file="CommandPattern.png"]
+--
+@startuml
+
+class Kumanda{
++KlimaAc()
++KlimaKapat()
++SıcaklıkArtar()
++SıcaklıkAzalt()
+}
+class Program{
+Main()
+}
+interface IKomut{
+Calistir()
+}
+class KlimaAcKomutu{
+-Kumanda kumanda
++KlimaAcKomutu(Kumanda kumanda)
++Calistir()
+}
+class KlimaKapatKomutu{
+-Kumanda kumanda
++KlimaKapatKomutu(Kumanda kumanda)
++Calistir()
+}
+class SicaklikArtirKomutu{
+-Kumanda kumanda
++SicaklikArtirKomutu(Kumanda kumanda)
++Calistir()
+}
+class SicaklikAzaltKomutu{
+-Kumanda kumanda
++SicaklikAzaltKomutu(Kumanda kumanda)
++Calistir()
+}
+class KomutIletici{
++Calistir(IKomut komut)
+}
+
+IKomut <|.. KlimaAcKomutu
+IKomut <|.. KlimaKapatKomutu
+IKomut <|.. SicaklikArtirKomutu
+IKomut <|.. SicaklikAzaltKomutu
+Kumanda --o KlimaAcKomutu
+Kumanda --o KlimaKapatKomutu
+Kumanda --o SicaklikArtirKomutu
+Kumanda --o SicaklikAzaltKomutu
+KomutIletici --> IKomut
+Program --> KomutIletici
+Program --> KlimaAcKomutu
+Program --> KlimaKapatKomutu
+Program --> SicaklikArtirKomutu
+Program --> SicaklikAzaltKomutu
+
+@enduml
+--

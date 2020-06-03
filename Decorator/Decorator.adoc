@@ -1,0 +1,43 @@
+
+[uml,file="Decorator.png"]
+--
+@startuml
+
+interface IBerber{
++SacKes()
++SakalKes()
+}
+class Berber{
++SacKes()
++SakalKes()
+}
+abstract Usta{
+-IBerber berber
+- «get/set» sac:int
+- «get/set» sakal:int
+- «get/set» name:String
+
++Berber(int sac,int sakal,int name)
++SacMaliyet(int sac)
++SakalMaliyet(int sakal)
++Name(string name)
++Usta(IBerber b)
++virtual SacKes()
++virtual SakalKes()
++Yazdir()
+}
+class Cirak{
+-IBerber berber
++Cirak(IBerber b)
++SacKes()
++SakalKes()
++Cirak Deepcopy():Cirak
+}
+
+IBerber <|.. Berber
+IBerber <|.. Usta
+Usta <|-- Cirak
+Usta o-- "IBerber"IBerber
+
+@enduml
+--

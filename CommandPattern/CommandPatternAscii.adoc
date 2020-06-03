@@ -1,0 +1,129 @@
+== Command Design Pattern
+
+Davranışsal (Behavioral) tasarım kalıplarından biri olan komut tasarım kalıbı, nesneye dayalı programlama (Object Oriented Programing) çalışmalarında çoğu zaman farkında olmadan kullanılan bir yapıdır. Komut tasarım kalıbı, kullanıcı isteklerini gerçekleştiren kod yapısının sarmalanarak nesneler halinde saklanmasına dayanır. Öyle ki üzerinde çalışılacak nesnenin tanımının yapılamadığı durumlar olabilir. Bu şartlarda ne tür çözüm yolları ile nesneye müdahale edilmeye çalışılabileceği kestirilemez, ancak gerçekleştirilmek istenen işlemler bir nesne olarak sarmalanır. Nesne halinde tutulan bu sarmal kod yapısı, alıcı nesne için bir çözüm oluşturur. Çözümlerin nesneler halinde saklanmasının getirisi olarak da komut tasarım kalıbı aynı kod yapısının tekrar tekrar kullanılabilmesine olanak sağlar.
+
+=== Ne zaman Kullanılır?
+
+Diyelim ki 20 tane butonumuz var ve her bir buton farklı işlemler yapıyor. Hangi butona tıklandığını if-else ile kontrol edip ilgili işlemin çalıştırılması yerine veya her buton tıklama olayı için ayrı 20 farklı metod yazmak yerine komut tasarım deseni kullanarak, yapılacak işlemler için(örneğin Açma, Kapama, Kaydetme vs. gibi) sınıflar oluştururuz. Daha sonra, bu butonların onclick event'ları içerisinde bu sınıflardan nesne yaratılıp execute() metodu çağırabiliriz. Bu sayede uzun ve karmaşık if-else yapısından da kurtulmuş oluruz.
+
+== Command Tasarım Kalıbında Kullanılan Terimler
+
+* Komut (Command) : Gerçekleştirilecek işlem için bir ara yüz tanımlar.
+
+* Somut Komut (Concrete Command): Alıcı ve gerçekleştirilecek işlemler arasında bir bağ kurar, alıcıda karşılık düşen işlemleri çağırarak çalıştırma eylemini gerçekleştirir.
+
+* İstemci (Client): Komut nesnesini oluşturur ve metodun sonraki zamanlarda çağrılabilmesi için gerekli bilgiyi sağlar.
+
+* Çağırıcı (Invoker): Metodun ne zaman çağrılacağını belirtir.
+
+* Alıcı (Receiver):  Kullanıcı isteklerini gerçekleştirecek asıl metod kodlarını içerir.
+
+[source,c#]
+-----
+ public interface IKomut
+    {
+        void Calistir();
+    }
+    
+    public class KomutIletici
+    {
+        public void Calistir(IKomut komut)
+        {
+            komut.Calistir();
+        }
+    }
+    
+-----
+Bu classlarımızda invoker ve ICommand yazılmıştır aslında IKomut interfacemizde sadece Calistir() metodumuz bulunmakta ve KomutIletici fonksiyonumuzda ise IKomut tipinden üretilmiş bir komut bulunmakta ve Calistir metodunu tetiklemektedir.
+[source,c#]
+-----
+public class KlimaAcKomutu : IKomut
+    {
+        private Kumanda kumanda;
+        public KlimaAcKomutu(Kumanda kumanda)
+        {
+            this.kumanda = kumanda;
+        }
+
+        public void Calistir()
+        {
+            kumanda.KlimaAc();
+        }
+    }
+    public class KlimaKapatKomutu : IKomut
+    {
+        private Kumanda kumanda;
+        public KlimaKapatKomutu(Kumanda kumanda)
+        {
+            this.kumanda = kumanda;
+        }
+
+        public void Calistir()
+        {
+            kumanda.KlimaKapat();
+        }
+    }
+    public class SicaklikArtirKomutu : IKomut
+    {
+        private Kumanda kumanda;
+        public SicaklikArtirKomutu(Kumanda kumanda)
+        {
+            this.kumanda = kumanda;
+        }
+
+        public void Calistir()
+        {
+            kumanda.SıcaklıkArtır();
+        }
+    }
+    public class SicaklikAzaltKomutu : IKomut
+    {
+        private Kumanda kumanda;
+        public SicaklikAzaltKomutu(Kumanda kumanda)
+        {
+            this.kumanda = kumanda;
+        }
+
+        public void Calistir()
+        {
+            kumanda.SıcaklıkAzalt();
+        }
+    }
+-----
+Burada ki metodlarımızın hepsi ise aslında verilen komutların sınıflarıdır Sıcaklık artırma azaltma gibi Klima açma kapama gibi bu sınıfların içerisindede Calistir metodumuz bulunmaktadır Kumanda sınıfımızdan ürettiğimiz nesnemiz ilede bu metodları tetiklemekteyiz.
+[source,c#]
+-----
+public class Kumanda
+    {
+        public void KlimaAc() => Console.WriteLine("Klima Açılmıştır");
+        public void KlimaKapat() => Console.WriteLine("Klima Kapatılmıştır.");
+        public void SıcaklıkArtır() => Console.WriteLine("Sıcaklık Arttı.");
+        public void SıcaklıkAzalt() => Console.WriteLine("Sıcaklık Azaldı.");
+
+    }
+-----
+Kumanda classımız aslında emri uygulayacak nesnedir biz içerisinde sadece yazı yazdırdık örneğimiz gereği.Her bir fonksiyon bir komutu yerine getirmektedir.
+[source,c#]
+-----
+ class Program
+    {
+        static void Main(string[] args)
+        {
+            KlimaAcKomutu klimaAcKomutu = new KlimaAcKomutu(new Kumanda());
+            KlimaKapatKomutu klimaKapatKomutu = new KlimaKapatKomutu(new Kumanda());
+            SicaklikArtirKomutu sicaklikArtirKomutu = new SicaklikArtirKomutu(new Kumanda());
+            SicaklikAzaltKomutu sicaklikAzaltKomutu = new SicaklikAzaltKomutu(new Kumanda());
+            KomutIletici kumanda = new KomutIletici();
+            kumanda.Calistir(klimaAcKomutu);
+            kumanda.Calistir(klimaKapatKomutu);
+            kumanda.Calistir(sicaklikArtirKomutu);
+            kumanda.Calistir(sicaklikAzaltKomutu);
+
+        }
+    }
+-----
+Mainimizde sınıflarımızı nesnelerimizi oluşturarak yazmış olduğumuz sıcaklık artırma,azaltma gibi klima açma kapatma gibi görevlerimizi KomutIletici sayesinde ileterek komutlarımızı gerçekleştiriyoruz.
+
+image::Desktop\SoftwareDesign\CommandPattern\CommandPatternCikti.PNG[]
+
+Oluşturduğumuz KomutIletici class ında ki kumanda ile calistir fonksiyonlarımızı tetikleyip komutlarımızı gerçeklemiş olduk.
